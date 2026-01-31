@@ -1,8 +1,8 @@
 const axios = require('axios');
 const cheerio = require('cheerio');
-const puppeteer = require('puppeteer-extra');
-const StealthPlugin = require('puppeteer-extra-plugin-stealth');
-puppeteer.use(StealthPlugin());
+const axios = require('axios');
+const cheerio = require('cheerio');
+// Puppeteer is now lazy-loaded to prevent crashing on Vercel where 'puppeteer' package is missing
 
 class ScraperService {
     async scrapeProduct(url) {
@@ -116,10 +116,16 @@ class ScraperService {
                 browser = await puppeteerCore.launch(launchOptions);
             } else {
                 // Local Development
-                const puppeteer = require('puppeteer-extra');
-                const StealthPlugin = require('puppeteer-extra-plugin-stealth');
-                puppeteer.use(StealthPlugin());
-                browser = await puppeteer.launch(launchOptions);
+                try {
+                    const puppeteer = require('puppeteer-extra');
+                    const StealthPlugin = require('puppeteer-extra-plugin-stealth');
+                    puppeteer.use(StealthPlugin());
+                    browser = await puppeteer.launch(launchOptions);
+                } catch (e) {
+                    console.warn("Puppeteer Extra failed to load, falling back to standard puppeteer if available");
+                    // Fallback if needed, or simple error
+                    throw e;
+                }
             }
 
             const page = await browser.newPage();
