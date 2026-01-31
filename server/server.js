@@ -43,7 +43,10 @@ app.use('/api/alerts', require('./routes/alertRoutes'));
 app.use(errorHandler);
 
 // Start cron jobs for automated price checking
-cronService.startPriceCheckJob();
+// Start cron jobs for automated price checking (Local only)
+if (!process.env.VERCEL) {
+    cronService.startPriceCheckJob();
+}
 
 // Start server
 // Start server if not running in Vercel (Serverless)
