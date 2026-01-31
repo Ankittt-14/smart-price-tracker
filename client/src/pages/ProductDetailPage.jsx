@@ -134,7 +134,7 @@ const ProductDetailPage = () => {
     <div className="min-h-screen bg-background-dark text-white">
       <Header />
 
-      <main className="max-w-7xl mx-auto px-6 py-8">
+      <main className="max-w-7xl mx-auto px-4 md:px-6 py-8">
         {/* Breadcrumbs */}
         <nav className="flex items-center gap-2 mb-8 text-sm font-medium text-slate-400">
           <a href="/dashboard" className="hover:text-primary transition-colors flex items-center gap-1">
@@ -287,7 +287,7 @@ const ProductDetailPage = () => {
                 <span className="material-symbols-outlined text-primary text-3xl">notifications_active</span>
               </div>
 
-              <form onSubmit={handleSetAlert} className="flex gap-4">
+              <form onSubmit={handleSetAlert} className="flex flex-col sm:flex-row gap-4">
                 <input
                   type="number"
                   value={targetPrice}

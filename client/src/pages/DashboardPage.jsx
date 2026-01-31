@@ -139,7 +139,7 @@ const DashboardPage = () => {
         </div>
 
         {/* Stats Cards - Glass Effect */}
-        <div className="grid md:grid-cols-4 gap-6 mb-12">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6 mb-12">
           {[
             { label: 'Total Products', value: totalProducts, icon: 'inventory_2', color: 'text-blue-400', bg: 'bg-blue-500/10' },
             { label: 'Active Alerts', value: activeAlerts, icon: 'notifications_active', color: 'text-primary', bg: 'bg-primary/10' },
