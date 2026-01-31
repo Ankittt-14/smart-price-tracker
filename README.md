@@ -1,4 +1,4 @@
-# ⚡ PricePulse - Smart E-commerce Price Tracker
+# ⚡ Smart Price Tracker - E-commerce Price Tracker
 
 ![PricePulse Demo](https://placehold.co/1200x400/0f172a/13ec5b?text=PricePulse+Dashboard)
 
@@ -71,7 +71,7 @@
 
 | Dashboard | Product Details |
 |-----------|-----------------|
-| ![Dashboard](https://placehold.co/600x400/1e293b/white?text=Dashboard+View) | ![Product](https://placehold.co/600x400/1e293b/white?text=Product+Analysis) |
+| ![Dashboard](screenshots/dashboard.png) | ![Product](screenshots/product-details.png) |
 
 ## 🤝 Contributing
 
