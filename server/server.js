@@ -26,8 +26,8 @@ app.use(morgan('dev'));
 
 // Health check route
 app.get('/api/health', (req, res) => {
-    res.json({ 
-        status: 'OK', 
+    res.json({
+        status: 'OK',
         message: 'PriceTracker India API is running!',
         timestamp: new Date().toISOString()
     });
@@ -52,3 +52,6 @@ app.listen(PORT, () => {
     console.log(`🌐 Environment: ${process.env.NODE_ENV}`);
     console.log(`⏰ Cron jobs started for automated price checks`);
 });
+
+// Export for Vercel Serverless
+module.exports = app;
