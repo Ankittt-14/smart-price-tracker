@@ -46,12 +46,15 @@ app.use(errorHandler);
 cronService.startPriceCheckJob();
 
 // Start server
-const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => {
-    console.log(`🚀 Server running on port ${PORT}`);
-    console.log(`🌐 Environment: ${process.env.NODE_ENV}`);
-    console.log(`⏰ Cron jobs started for automated price checks`);
-});
+// Start server if not running in Vercel (Serverless)
+if (require.main === module) {
+    const PORT = process.env.PORT || 5000;
+    app.listen(PORT, () => {
+        console.log(`🚀 Server running on port ${PORT}`);
+        console.log(`🌐 Environment: ${process.env.NODE_ENV}`);
+        console.log(`⏰ Cron jobs started for automated price checks`);
+    });
+}
 
 // Export for Vercel Serverless
 module.exports = app;
