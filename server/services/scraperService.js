@@ -90,7 +90,7 @@ class ScraperService {
     async scrapeWithPuppeteer(url, platform) {
         let browser = null;
         try {
-            browser = await puppeteer.launch({
+            let launchOptions = {
                 headless: "new",
                 args: [
                     '--no-sandbox',
@@ -101,7 +101,26 @@ class ScraperService {
                     '--window-size=1920,1080',
                     '--disable-blink-features=AutomationControlled'
                 ]
-            });
+            };
+
+            // Vercel / AWS Lambda optimizations
+            if (process.env.VERCEL || process.env.AWS_LAMBDA_FUNCTION_VERSION) {
+                const chromium = require('@sparticuz/chromium');
+                const puppeteerCore = require('puppeteer-core');
+
+                // Use light chromium binary
+                launchOptions.executablePath = await chromium.executablePath();
+                launchOptions.headless = chromium.headless;
+
+                // Use puppeteer-core which is lighter
+                browser = await puppeteerCore.launch(launchOptions);
+            } else {
+                // Local Development
+                const puppeteer = require('puppeteer-extra');
+                const StealthPlugin = require('puppeteer-extra-plugin-stealth');
+                puppeteer.use(StealthPlugin());
+                browser = await puppeteer.launch(launchOptions);
+            }
 
             const page = await browser.newPage();
 
