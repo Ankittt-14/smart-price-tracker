@@ -103,15 +103,10 @@ class ScraperService {
 
             // Vercel / AWS Lambda optimizations
             if (process.env.VERCEL || process.env.AWS_LAMBDA_FUNCTION_VERSION) {
-                const chromium = require('@sparticuz/chromium');
-                const puppeteerCore = require('puppeteer-core');
-
-                // Use light chromium binary
-                launchOptions.executablePath = await chromium.executablePath();
-                launchOptions.headless = chromium.headless;
-
-                // Use puppeteer-core which is lighter
-                browser = await puppeteerCore.launch(launchOptions);
+                // Puppeteer is too heavy for Vercel Free Tier (50MB limit)
+                // We fallback to Cheerio (Fast Mode) only.
+                console.log('⚠️ Puppeteer disabled on Vercel to prevent crash (Size Limit).');
+                return null;
             } else {
                 // Local Development
                 try {
