@@ -1,7 +1,5 @@
 const axios = require('axios');
 const cheerio = require('cheerio');
-const axios = require('axios');
-const cheerio = require('cheerio');
 // Puppeteer is now lazy-loaded to prevent crashing on Vercel where 'puppeteer' package is missing
 
 class ScraperService {
