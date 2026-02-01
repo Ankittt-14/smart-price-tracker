@@ -29,7 +29,7 @@ const Footer = () => {
           <div className="space-y-3">
             <h4 className="text-xs font-black uppercase tracking-widest text-slate-400">Support</h4>
             <ul className="text-sm space-y-2 font-medium">
-              <li><a href="mailto:support@pricetrackerindia.com" className="hover:text-primary transition-colors">Contact Us</a></li>
+              <li><Link to="/contact" className="hover:text-primary transition-colors">Contact Us</Link></li>
               <li><Link to="/faq" className="hover:text-primary transition-colors">FAQ</Link></li>
             </ul>
           </div>
