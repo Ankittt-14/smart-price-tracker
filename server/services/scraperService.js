@@ -104,17 +104,34 @@ class ScraperService {
                 console.log('🚀 Launching Puppeteer Core with Chromium for Serverless...');
                 const chromium = require('@sparticuz/chromium');
                 const puppeteer = require('puppeteer-core');
-                
-                // Optional: helper to force graphics mode if needed, but usually headless recommended
-                // chromium.setGraphicsMode = false; 
+
+                // Optimized args for Vercel/AWS Lambda
+                chromium.setGraphicsMode = false; // Ensure headless
+
+                const executablePath = await chromium.executablePath();
+                console.log(`ℹ️ Chromium Executable Path: ${executablePath}`);
 
                 browser = await puppeteer.launch({
-                    args: [...chromium.args, '--hide-scrollbars', '--disable-web-security'],
+                    args: [
+                        ...chromium.args,
+                        '--hide-scrollbars',
+                        '--disable-web-security',
+                        '--no-sandbox',
+                        '--disable-setuid-sandbox',
+                        '--disable-dev-shm-usage',
+                        '--disable-accelerated-2d-canvas',
+                        '--no-first-run',
+                        '--no-zygote',
+                        '--single-process', // Critical for memory constrained envs
+                        '--disable-gpu'
+                    ],
                     defaultViewport: chromium.defaultViewport,
-                    executablePath: await chromium.executablePath(),
+                    executablePath: executablePath,
                     headless: chromium.headless,
                     ignoreHTTPSErrors: true,
+                    dumpio: true // Log stdout/stderr from browser
                 });
+                console.log('✅ Browser launched successfully (Serverless Mode)');
 
             } else {
                 // Local Development
@@ -123,11 +140,11 @@ class ScraperService {
                     const puppeteer = require('puppeteer-extra');
                     const StealthPlugin = require('puppeteer-extra-plugin-stealth');
                     puppeteer.use(StealthPlugin());
-                    
+
                     browser = await puppeteer.launch({
                         headless: "new",
                         args: defaultArgs,
-                        executablePath: require('puppeteer').executablePath() // Use the installed puppeteer's chrome
+                        executablePath: require('puppeteer').executablePath()
                     });
                 } catch (e) {
                     console.warn("Local Puppeteer Extra failed, trying standard puppeteer");
