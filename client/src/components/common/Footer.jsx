@@ -16,23 +16,24 @@ const Footer = () => {
             India's leading smart price tracking platform. We monitor millions of products across 50+ stores to help you save every single rupee.
           </p>
         </div>
-        <div className="grid grid-cols-2 sm:grid-cols-3 gap-8">
+        <div className="grid grid-cols-2 md:grid-cols-3 gap-8">
           <div className="space-y-3">
             <h4 className="text-xs font-black uppercase tracking-widest text-slate-400">Company</h4>
             <ul className="text-sm space-y-2 font-medium">
               <li><Link to="/about" className="hover:text-primary transition-colors">About Us</Link></li>
-              <li><Link to="/career" className="hover:text-primary transition-colors">Career</Link></li>
-              <li><Link to="/blog" className="hover:text-primary transition-colors">Blog</Link></li>
+              <li><Link to="/privacy" className="hover:text-primary transition-colors">Privacy Policy</Link></li>
+              <li><Link to="/terms" className="hover:text-primary transition-colors">Terms of Service</Link></li>
             </ul>
           </div>
+
           <div className="space-y-3">
-            <h4 className="text-xs font-black uppercase tracking-widest text-slate-400">Features</h4>
+            <h4 className="text-xs font-black uppercase tracking-widest text-slate-400">Support</h4>
             <ul className="text-sm space-y-2 font-medium">
-              <li><Link to="/price-alerts" className="hover:text-primary transition-colors">Price Alerts</Link></li>
-              <li><Link to="/coupons" className="hover:text-primary transition-colors">Coupons</Link></li>
-              <li><Link to="/extension" className="hover:text-primary transition-colors">Extension</Link></li>
+              <li><a href="mailto:support@pricetrackerindia.com" className="hover:text-primary transition-colors">Contact Us</a></li>
+              <li><Link to="/faq" className="hover:text-primary transition-colors">FAQ</Link></li>
             </ul>
           </div>
+
           <div className="space-y-3">
             <h4 className="text-xs font-black uppercase tracking-widest text-slate-400">Social</h4>
             <div className="flex gap-4">

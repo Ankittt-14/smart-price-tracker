@@ -11,6 +11,7 @@ import ProductDetailPage from './pages/ProductDetailPage';
 import DashboardPage from './pages/DashboardPage';
 import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
+import AboutPage from './pages/AboutPage';
 
 function App() {
   return (
@@ -24,6 +25,10 @@ function App() {
             <Route path="/dashboard" element={<DashboardPage />} />
             <Route path="/login" element={<LoginPage />} />
             <Route path="/register" element={<RegisterPage />} />
+            <Route path="/about" element={<AboutPage />} />
+            {/* Redirect others to About for now */}
+            <Route path="/privacy" element={<AboutPage />} />
+            <Route path="/terms" element={<AboutPage />} />
           </Routes>
         </main>
         <Footer />
