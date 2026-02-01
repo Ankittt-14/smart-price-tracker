@@ -78,7 +78,12 @@ const ContactPage = () => {
 
                 <div className="mt-10 text-center text-slate-500 text-sm">
                     <p>Or email us directly at:</p>
-                    <a href="mailto:masterrajaniket@gmail.com" className="text-primary font-bold hover:underline">
+                    <a
+                        href="https://mail.google.com/mail/?view=cm&fs=1&to=masterrajaniket@gmail.com"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-primary font-bold hover:underline"
+                    >
                         masterrajaniket@gmail.com
                     </a>
                 </div>
