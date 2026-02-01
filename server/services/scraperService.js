@@ -100,6 +100,7 @@ class ScraperService {
                     '--disable-accelerated-2d-canvas',
                     '--disable-gpu',
                     '--window-size=1920,1080',
+                    '--disable-blink-features=AutomationControlled' // Hide automation
                 ]
             });
 
@@ -118,7 +119,7 @@ class ScraperService {
             // Set User Agent
             await page.setUserAgent('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36');
 
-            await page.goto(url, { waitUntil: 'networkidle2', timeout: 50000 }); // Slightly increased timeout
+            await page.goto(url, { waitUntil: 'domcontentloaded', timeout: 60000 }); // Changed to domcontentloaded for speed
 
             // Get page content
             const content = await page.content();
@@ -129,7 +130,15 @@ class ScraperService {
 
             switch (platform) {
                 case 'amazon': data = this.parseAmazon($); break;
-                case 'flipkart': data = this.parseFlipkart($); break;
+                // Updated Flipkart logic
+                case 'flipkart':
+                    data = this.parseFlipkart($);
+                    // Fallback if class names changed
+                    if (!data.currentPrice) {
+                        const priceText = $('div[class*="30jeq3"]').text() || $('div[class*="1vC4OE"]').text();
+                        data.currentPrice = parseInt(priceText.replace(/[^0-9]/g, '')) || 0;
+                    }
+                    break;
                 case 'myntra': data = this.parseMyntra($); break;
                 case 'ajio': data = this.parseAjio($); break;
                 case 'snapdeal': data = this.parseSnapdeal($); break;
