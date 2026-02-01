@@ -9,15 +9,17 @@ exports.sendFeedback = async (req, res) => {
             return res.status(400).json({ message: 'Please fill in all fields' });
         }
 
-        // Transporter (Use explicit SMTP settings for Railway/Docker)
+        // Transporter (Try Port 587 - Mobile/Web standard)
         const transporter = nodemailer.createTransport({
             host: 'smtp.gmail.com',
-            port: 465,
-            secure: true, // true for 465, false for other ports
+            port: 587,
+            secure: false, // true for 465, false for 587
             auth: {
                 user: process.env.EMAIL_USER,
                 pass: process.env.EMAIL_PASS
-            }
+            },
+            logger: true, // Log to console
+            debug: true   // Include debug info
         });
 
         const mailOptions = {
