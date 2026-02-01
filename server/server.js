@@ -16,8 +16,12 @@ const app = express();
 connectDB();
 
 // Middleware
+// Middleware
+// Normalize FRONTEND_URL to remove trailing slash for CORS check
+const frontendUrl = (process.env.FRONTEND_URL || 'http://localhost:3000').replace(/\/$/, '');
+
 app.use(cors({
-    origin: process.env.FRONTEND_URL || 'http://localhost:3000',
+    origin: frontendUrl,
     credentials: true
 }));
 app.use(express.json());
