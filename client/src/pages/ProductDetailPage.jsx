@@ -2,8 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import { toast } from 'react-toastify';
-import Header from '../components/common/Header';
-import Footer from '../components/common/Footer';
+// Header and Footer are global now
 import { productService, alertService } from '../services/api';
 
 const ProductDetailPage = () => {
@@ -132,7 +131,7 @@ const ProductDetailPage = () => {
 
   return (
     <div className="min-h-screen bg-background-dark text-white">
-      <Header />
+      {/* Header is global */}
 
       <main className="max-w-7xl mx-auto px-4 md:px-6 py-8">
         {/* Breadcrumbs */}
@@ -308,7 +307,7 @@ const ProductDetailPage = () => {
           </div>
         </div>
       </main>
-      <Footer />
+      {/* Footer is global */}
     </div>
   );
 };

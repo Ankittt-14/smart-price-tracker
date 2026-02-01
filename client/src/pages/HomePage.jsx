@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import Header from '../components/common/Header';
-import Footer from '../components/common/Footer';
+// Header and Footer are global now
 import { productService } from '../services/api';
 
 const HomePage = () => {
@@ -24,7 +23,7 @@ const HomePage = () => {
 
   return (
     <div className="min-h-screen bg-background-dark text-white overflow-hidden">
-      <Header />
+      {/* Header is global */}
 
       {/* Hero Section with Floating Animation */}
       <main className="relative max-w-7xl mx-auto px-6 pt-20 pb-16">
@@ -123,7 +122,7 @@ const HomePage = () => {
         </div>
 
       </main>
-      <Footer />
+      {/* Footer is global */}
     </div>
   );
 };

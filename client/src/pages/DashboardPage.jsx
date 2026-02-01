@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
-import Header from '../components/common/Header';
-import Footer from '../components/common/Footer';
+// Header and Footer are global now
 import { productService, authService } from '../services/api';
 
 const DashboardPage = () => {
@@ -118,7 +117,7 @@ const DashboardPage = () => {
 
   return (
     <div className="min-h-screen bg-background-dark text-white">
-      <Header />
+      {/* Header is global */}
       <main className="max-w-7xl mx-auto px-6 py-12">
         {/* Header Section */}
         <div className="flex flex-col md:flex-row justify-between items-end mb-12 gap-6">
@@ -357,7 +356,7 @@ const DashboardPage = () => {
         </div>
       )}
 
-      <Footer />
+      {/* Footer is global */}
     </div>
   );
 };
