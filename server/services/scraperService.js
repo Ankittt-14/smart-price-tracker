@@ -99,40 +99,11 @@ class ScraperService {
                 '--disable-blink-features=AutomationControlled' // basic stealth
             ];
 
-            // Vercel / Production Environment
-            if (process.env.VERCEL || process.env.AWS_LAMBDA_FUNCTION_VERSION || process.env.NODE_ENV === 'production') {
-                console.log('🚀 Launching Puppeteer Core with Chromium for Serverless...');
-                const chromium = require('@sparticuz/chromium');
-                const puppeteer = require('puppeteer-core');
-
-                // Optimized args for Vercel/AWS Lambda
-                chromium.setGraphicsMode = false; // Ensure headless
-
-                const executablePath = await chromium.executablePath();
-                console.log(`ℹ️ Chromium Executable Path: ${executablePath}`);
-
-                browser = await puppeteer.launch({
-                    args: [
-                        ...chromium.args,
-                        '--hide-scrollbars',
-                        '--disable-web-security',
-                        '--no-sandbox',
-                        '--disable-setuid-sandbox',
-                        '--disable-dev-shm-usage',
-                        '--disable-accelerated-2d-canvas',
-                        '--no-first-run',
-                        '--no-zygote',
-                        '--single-process', // Critical for memory constrained envs
-                        '--disable-gpu'
-                    ],
-                    defaultViewport: chromium.defaultViewport,
-                    executablePath: executablePath,
-                    headless: chromium.headless,
-                    ignoreHTTPSErrors: true,
-                    dumpio: true // Log stdout/stderr from browser
-                });
-                console.log('✅ Browser launched successfully (Serverless Mode)');
-
+            // Vercel / Production Environment - COMPLETELY DISABLE PUPPETEER
+            if (process.env.VERCEL || process.env.AWS_LAMBDA_FUNCTION_VERSION) {
+                console.log('⚠️ Puppeteer disabled on Vercel to prevent crash (Size Limit).');
+                console.log('ℹ️ Falling back to Cheerio (Fast Mode) only.');
+                return null;
             } else {
                 // Local Development
                 console.log('💻 Launching Puppeteer (Local)...');
