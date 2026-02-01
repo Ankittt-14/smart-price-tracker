@@ -88,36 +88,54 @@ class ScraperService {
     async scrapeWithPuppeteer(url, platform) {
         let browser = null;
         try {
-            let launchOptions = {
-                headless: "new",
-                args: [
-                    '--no-sandbox',
-                    '--disable-setuid-sandbox',
-                    '--disable-dev-shm-usage',
-                    '--disable-accelerated-2d-canvas',
-                    '--disable-gpu',
-                    '--window-size=1920,1080',
-                    '--disable-blink-features=AutomationControlled'
-                ]
-            };
+            // Common launch options
+            const defaultArgs = [
+                '--no-sandbox',
+                '--disable-setuid-sandbox',
+                '--disable-dev-shm-usage',
+                '--disable-accelerated-2d-canvas',
+                '--disable-gpu',
+                '--window-size=1920,1080',
+                '--disable-blink-features=AutomationControlled' // basic stealth
+            ];
 
-            // Vercel / AWS Lambda optimizations
-            if (process.env.VERCEL || process.env.AWS_LAMBDA_FUNCTION_VERSION) {
-                // Puppeteer is too heavy for Vercel Free Tier (50MB limit)
-                // We fallback to Cheerio (Fast Mode) only.
-                console.log('⚠️ Puppeteer disabled on Vercel to prevent crash (Size Limit).');
-                return null;
+            // Vercel / Production Environment
+            if (process.env.VERCEL || process.env.AWS_LAMBDA_FUNCTION_VERSION || process.env.NODE_ENV === 'production') {
+                console.log('🚀 Launching Puppeteer Core with Chromium for Serverless...');
+                const chromium = require('@sparticuz/chromium');
+                const puppeteer = require('puppeteer-core');
+                
+                // Optional: helper to force graphics mode if needed, but usually headless recommended
+                // chromium.setGraphicsMode = false; 
+
+                browser = await puppeteer.launch({
+                    args: [...chromium.args, '--hide-scrollbars', '--disable-web-security'],
+                    defaultViewport: chromium.defaultViewport,
+                    executablePath: await chromium.executablePath(),
+                    headless: chromium.headless,
+                    ignoreHTTPSErrors: true,
+                });
+
             } else {
                 // Local Development
+                console.log('💻 Launching Puppeteer (Local)...');
                 try {
                     const puppeteer = require('puppeteer-extra');
                     const StealthPlugin = require('puppeteer-extra-plugin-stealth');
                     puppeteer.use(StealthPlugin());
-                    browser = await puppeteer.launch(launchOptions);
+                    
+                    browser = await puppeteer.launch({
+                        headless: "new",
+                        args: defaultArgs,
+                        executablePath: require('puppeteer').executablePath() // Use the installed puppeteer's chrome
+                    });
                 } catch (e) {
-                    console.warn("Puppeteer Extra failed to load, falling back to standard puppeteer if available");
-                    // Fallback if needed, or simple error
-                    throw e;
+                    console.warn("Local Puppeteer Extra failed, trying standard puppeteer");
+                    const puppeteer = require('puppeteer');
+                    browser = await puppeteer.launch({
+                        headless: "new",
+                        args: defaultArgs
+                    });
                 }
             }
 
@@ -133,18 +151,12 @@ class ScraperService {
                 }
             });
 
-            // Set User Agent to a very recent real browser
+            // Set User Agent
             await page.setUserAgent('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36');
 
-            // Set extra headers
-            await page.setExtraHTTPHeaders({
-                'Accept-Language': 'en-US,en;q=0.9',
-                'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8',
-            });
+            await page.goto(url, { waitUntil: 'networkidle2', timeout: 50000 }); // Slightly increased timeout
 
-            await page.goto(url, { waitUntil: 'networkidle2', timeout: 45000 });
-
-            // Get page content and pass to Cheerio (reuse parsing logic)
+            // Get page content
             const content = await page.content();
             const $ = cheerio.load(content);
 
