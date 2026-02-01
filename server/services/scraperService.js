@@ -88,44 +88,20 @@ class ScraperService {
     async scrapeWithPuppeteer(url, platform) {
         let browser = null;
         try {
-            // Common launch options
-            const defaultArgs = [
-                '--no-sandbox',
-                '--disable-setuid-sandbox',
-                '--disable-dev-shm-usage',
-                '--disable-accelerated-2d-canvas',
-                '--disable-gpu',
-                '--window-size=1920,1080',
-                '--disable-blink-features=AutomationControlled' // basic stealth
-            ];
-
-            // Vercel / Production Environment - COMPLETELY DISABLE PUPPETEER
-            if (process.env.VERCEL || process.env.AWS_LAMBDA_FUNCTION_VERSION) {
-                console.log('⚠️ Puppeteer disabled on Vercel to prevent crash (Size Limit).');
-                console.log('ℹ️ Falling back to Cheerio (Fast Mode) only.');
-                return null;
-            } else {
-                // Local Development
-                console.log('💻 Launching Puppeteer (Local)...');
-                try {
-                    const puppeteer = require('puppeteer-extra');
-                    const StealthPlugin = require('puppeteer-extra-plugin-stealth');
-                    puppeteer.use(StealthPlugin());
-
-                    browser = await puppeteer.launch({
-                        headless: "new",
-                        args: defaultArgs,
-                        executablePath: require('puppeteer').executablePath()
-                    });
-                } catch (e) {
-                    console.warn("Local Puppeteer Extra failed, trying standard puppeteer");
-                    const puppeteer = require('puppeteer');
-                    browser = await puppeteer.launch({
-                        headless: "new",
-                        args: defaultArgs
-                    });
-                }
-            }
+            // Standard Launch Options for Docker/Railway
+            // We use no–sandbox because we are root in Docker usually, 
+            // and the official image handles dependencies.
+            browser = await require('puppeteer-extra').launch({
+                headless: "new",
+                args: [
+                    '--no-sandbox',
+                    '--disable-setuid-sandbox',
+                    '--disable-dev-shm-usage', // Important for Docker
+                    '--disable-accelerated-2d-canvas',
+                    '--disable-gpu',
+                    '--window-size=1920,1080',
+                ]
+            });
 
             const page = await browser.newPage();
 
