@@ -53,6 +53,7 @@ app.use('/api/auth', require('./routes/authRoutes'));
 app.use('/api/products', require('./routes/productRoutes'));
 app.use('/api/prices', require('./routes/priceRoutes'));
 app.use('/api/alerts', require('./routes/alertRoutes'));
+app.use('/api/support', require('./routes/supportRoutes'));
 
 // Error handler middleware (should be last)
 app.use(errorHandler);
