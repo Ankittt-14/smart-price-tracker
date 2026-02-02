@@ -1,11 +1,14 @@
-import React, { useState, useEffect } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import React, { useState, useEffect, useMemo } from 'react';
+import { useNavigate, Link, useSearchParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
 // Header and Footer are global now
 import { productService, authService } from '../services/api';
 
 const DashboardPage = () => {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const query = searchParams.get('q');
+
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [addingProduct, setAddingProduct] = useState(false);
@@ -31,6 +34,18 @@ const DashboardPage = () => {
     fetchProducts();
   }, [navigate]);
 
+  useEffect(() => {
+    if (query) {
+      // If query looks like a URL, prepopulate the URL input
+      if (query.startsWith('http')) {
+        setProductUrl(query);
+        // Optional: Auto-scroll to input or focus it
+        const input = document.getElementById('urlInput');
+        if (input) input.focus();
+      }
+    }
+  }, [query]);
+
   const fetchProducts = async () => {
     try {
       const data = await productService.getProducts();
@@ -42,6 +57,11 @@ const DashboardPage = () => {
       setLoading(false);
     }
   };
+
+  const filteredProducts = useMemo(() => {
+    if (!query || query.startsWith('http')) return products;
+    return products.filter(p => p.name.toLowerCase().includes(query.toLowerCase()));
+  }, [products, query]);
 
   const handleAddProductByUrl = async (e) => {
     e.preventDefault();
@@ -56,6 +76,8 @@ const DashboardPage = () => {
       toast.success('Product added successfully!');
       setProducts([newProduct, ...products]);
       setProductUrl('');
+      // Clear search param after successful add if it was a URL
+      if (query && query.startsWith('http')) navigate('/dashboard');
     } catch (error) {
       toast.error(error.response?.data?.message || 'Failed to add product');
     } finally {
@@ -174,6 +196,7 @@ const DashboardPage = () => {
             <div className="flex-[2] w-full">
               <form onSubmit={handleAddProductByUrl} className="relative group">
                 <input
+                  id="urlInput"
                   type="url"
                   value={productUrl}
                   onChange={(e) => setProductUrl(e.target.value)}
@@ -200,19 +223,21 @@ const DashboardPage = () => {
         {/* Products Grid */}
         <h2 className="text-2xl font-bold mb-6 flex items-center gap-3">
           <span className="material-symbols-outlined text-primary">grid_view</span>
-          Your Tracked Items
-          <span className="text-sm bg-white/10 px-3 py-1 rounded-full text-slate-300 font-normal">{products.length}</span>
+          {query && !query.startsWith('http') ? `Search Results for "${query}"` : 'Your Tracked Items'}
+          <span className="text-sm bg-white/10 px-3 py-1 rounded-full text-slate-300 font-normal">{filteredProducts.length}</span>
         </h2>
 
-        {products.length === 0 ? (
+        {filteredProducts.length === 0 ? (
           <div className="bg-white/5 rounded-2xl p-16 border-2 border-dashed border-white/10 text-center hover:border-white/20 transition-colors">
             <span className="material-symbols-outlined text-slate-600 text-8xl mb-6 block">shopping_cart_checkout</span>
-            <h3 className="text-2xl font-bold mb-3">No products yet</h3>
-            <p className="text-slate-400 mb-8 max-w-md mx-auto">Start building your watchlist by adding a product URL above. We'll handle the rest!</p>
+            <h3 className="text-2xl font-bold mb-3">No products found</h3>
+            <p className="text-slate-400 mb-8 max-w-md mx-auto">
+              {query ? 'Try a different search term or add a new product.' : 'Start building your watchlist by adding a product URL above.'}
+            </p>
           </div>
         ) : (
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {products.map((product) => (
+            {filteredProducts.map((product) => (
               <div key={product._id} className="group bg-white/5 backdrop-blur-sm rounded-2xl p-5 border border-white/10 hover:border-primary/50 hover:bg-white/10 transition-all duration-300 hover:-translate-y-1">
 
                 {/* Image Area */}
