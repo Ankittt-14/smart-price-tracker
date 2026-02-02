@@ -134,7 +134,14 @@ exports.getProduct = async (req, res) => {
 // @access  Public
 exports.getTrendingProducts = async (req, res) => {
     try {
-        const products = await Product.find({ isActive: true })
+        // Filter out invalid/incomplete products
+        const products = await Product.find({
+            isActive: true,
+            currentPrice: { $gt: 0 },
+            imageUrl: { $ne: null, $ne: '' },
+            platform: { $nin: ['unknown', 'other'] },
+            name: { $not: { $regex: /^Product from/ } } // Exclude generic names
+        })
             .sort({ createdAt: -1 })
             .limit(12)
             .select('name currentPrice originalPrice imageUrl platform url createdAt');
