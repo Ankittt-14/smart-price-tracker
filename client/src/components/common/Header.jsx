@@ -6,6 +6,7 @@ const Header = () => {
   const navigate = useNavigate();
   const [user, setUser] = useState(null);
   const [showDropdown, setShowDropdown] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
 
   useEffect(() => {
     const currentUser = authService.getCurrentUser();
@@ -15,6 +16,13 @@ const Header = () => {
   const handleLogout = () => {
     authService.logout();
     navigate('/login');
+  };
+
+  const handleSearch = (e) => {
+    if (e.key === 'Enter' && searchQuery.trim()) {
+      navigate(`/dashboard?q=${encodeURIComponent(searchQuery)}`);
+      setSearchQuery('');
+    }
   };
 
   return (
@@ -36,16 +44,19 @@ const Header = () => {
             </Link>
           </nav>
         </div>
-        
+
         <div className="flex flex-1 justify-end items-center gap-4 max-w-md">
           <div className="relative w-full">
             <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400">
               search
             </span>
             <input
-              className="w-full bg-slate-100 dark:bg-white/5 border-none rounded-lg pl-10 pr-4 py-2 text-sm focus:ring-2 focus:ring-primary/50 transition-all"
-              placeholder="Search products..."
+              className="w-full bg-slate-100 dark:bg-white/5 border-none rounded-lg pl-10 pr-4 py-2 text-sm focus:ring-2 focus:ring-primary/50 transition-all text-white"
+              placeholder="Search or paste product URL..."
               type="text"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              onKeyDown={handleSearch}
             />
           </div>
 
@@ -99,5 +110,4 @@ const Header = () => {
     </header>
   );
 };
-
 export default Header;
