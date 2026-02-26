@@ -19,23 +19,11 @@ connectDB();
 // Normalize FRONTEND_URL to remove trailing slash for CORS check
 const frontendUrl = (process.env.FRONTEND_URL || 'http://localhost:3000').replace(/\/$/, '');
 
-// Allow both localhost and the live frontend URL
-const allowedOrigins = [
-    'http://localhost:3000',
-    'http://localhost:5173',
-    frontendUrl
-];
-
 app.use(cors({
     origin: function (origin, callback) {
-        // allow requests with no origin (like mobile apps or curl requests)
-        // or if the origin is in our allowed list
-        if (!origin || allowedOrigins.includes(origin)) {
-            callback(null, true);
-        } else {
-            console.warn(`CORS blocked request from origin: ${origin}`);
-            callback(new Error('Not allowed by CORS'));
-        }
+        // Allow all origins since Vercel generates dynamic preview domains 
+        // that won't strictly match the FRONTEND_URL environment variable
+        callback(null, true);
     },
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
