@@ -36,12 +36,17 @@ class ScraperService {
     async scrapeWithCheerio(url, platform) {
         try {
             // Use Googlebot user-agent to bypass strict datacenter IP blocks (like Flipkart)
-            const isFlipkart = platform === 'flipkart';
-            const userAgent = isFlipkart
+            const isStrictPlatform = platform === 'flipkart' || platform === 'amazon';
+            const userAgent = isStrictPlatform
                 ? 'Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)'
                 : 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36';
 
-            const response = await axios.get(url, {
+            // Route strict platforms through a free public proxy to bypass Vercel Datacenter IP bans
+            const finalUrl = isStrictPlatform
+                ? `https://api.allorigins.win/raw?url=${encodeURIComponent(url)}`
+                : url;
+
+            const response = await axios.get(finalUrl, {
                 headers: {
                     'User-Agent': userAgent,
                     'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8',
