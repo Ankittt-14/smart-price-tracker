@@ -33,9 +33,7 @@ const HomePage = () => {
         <div className="absolute top-40 right-1/4 w-72 h-72 bg-blue-500/20 rounded-full blur-3xl animate-pulse delay-1000 -z-10"></div>
 
         <div className="text-center mb-24 relative z-10">
-          <div className="inline-block mb-4 px-4 py-1 rounded-full bg-white/5 border border-white/10 backdrop-blur-md animate-bounce">
-            <span className="text-primary font-bold">✨ New v2.0 Released</span>
-          </div>
+
 
           <h1 className="text-6xl md:text-7xl font-black text-white mb-6 tracking-tight">
             Track Prices. <br />

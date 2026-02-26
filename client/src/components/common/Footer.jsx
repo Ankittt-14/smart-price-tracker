@@ -49,7 +49,7 @@ const Footer = () => {
       </div>
       <div className="max-w-7xl mx-auto pt-8 mt-8 border-t border-slate-200 dark:border-white/10 text-center">
         <p className="text-xs text-slate-500 font-medium">
-          © 2024 PriceTracker India. All prices are updated in real-time. We may earn a small commission on purchases via our links.
+          © 2026 PriceTracker India. All prices are updated in real-time. We may earn a small commission on purchases via our links.
         </p>
       </div>
     </footer>
