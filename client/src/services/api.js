@@ -5,12 +5,15 @@ import axios from 'axios';
 const getBaseUrl = () => {
   let url = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
 
-  // 1. Ensure it starts with https:// (if missing)
+  // 1. Ensure it starts with https:// (if missing and not localhost)
   if (!url.startsWith('http://') && !url.startsWith('https://')) {
     url = `https://${url}`;
   }
 
-  // 2. Ensure it ends with /api
+  // 2. Remove any trailing slashes to prevent Vercel 308 redirects from double-slashes (//api)
+  url = url.replace(/\/+$/, '');
+
+  // 3. Ensure it ends with /api
   if (!url.endsWith('/api')) {
     url += '/api';
   }
