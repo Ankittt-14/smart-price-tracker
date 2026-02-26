@@ -12,22 +12,20 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "axios": "^1.7.0",
+    "bcryptjs": "^2.4.3",
+    "cheerio": "^1.0.0-rc.12",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "express": "^4.21.0",
+    "jsonwebtoken": "^9.0.2",
     "mongoose": "^9.1.5",
     "morgan": "^1.10.1",
     "node-cron": "^4.2.1",
-    "nodemailer": "^6.9.9",
-    "puppeteer": "^24.3.0",
-    "express": "^4.21.0",
-    "cors": "^2.8.5",
-    "dotenv": "^16.4.5",
-    "axios": "^1.7.0",
-    "cheerio": "^1.0.0-rc.12",
-    "bcryptjs": "^2.4.3",
-    "jsonwebtoken": "^9.0.2"
+    "nodemailer": "^6.9.9"
   },
   "devDependencies": {
     "nodemon": "^3.1.11",
-    "puppeteer-extra": "^3.3.6",
     "puppeteer-extra-plugin-stealth": "^2.11.2"
   }
 }

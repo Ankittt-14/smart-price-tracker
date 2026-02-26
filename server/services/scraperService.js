@@ -12,13 +12,6 @@ class ScraperService {
             console.log('🚀 Attempting fast scrape (Cheerio)...');
             let data = await this.scrapeWithCheerio(url, platform);
 
-            // 2. If Cheerio fails or returns no price, try Puppeteer (Most Reliable)
-            if (!data || data.currentPrice === 0) {
-                if (data && data.currentPrice === 0) console.info('ℹ️ No price found in fast mode.');
-                console.log('🔄 Activating Puppeteer (Advanced Scraper)...');
-                data = await this.scrapeWithPuppeteer(url, platform);
-            }
-
             if (data && data.currentPrice > 0) {
                 // Ensure platform is set
                 data.platform = platform;
