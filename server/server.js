@@ -16,13 +16,30 @@ const app = express();
 connectDB();
 
 // Middleware
-// Middleware
 // Normalize FRONTEND_URL to remove trailing slash for CORS check
 const frontendUrl = (process.env.FRONTEND_URL || 'http://localhost:3000').replace(/\/$/, '');
 
+// Allow both localhost and the live frontend URL
+const allowedOrigins = [
+    'http://localhost:3000',
+    'http://localhost:5173',
+    frontendUrl
+];
+
 app.use(cors({
-    origin: frontendUrl,
-    credentials: true
+    origin: function (origin, callback) {
+        // allow requests with no origin (like mobile apps or curl requests)
+        // or if the origin is in our allowed list
+        if (!origin || allowedOrigins.includes(origin)) {
+            callback(null, true);
+        } else {
+            console.warn(`CORS blocked request from origin: ${origin}`);
+            callback(new Error('Not allowed by CORS'));
+        }
+    },
+    credentials: true,
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization']
 }));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
