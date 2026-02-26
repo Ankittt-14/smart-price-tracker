@@ -27,7 +27,6 @@ const connectDB = async () => {
 
         cached.promise = mongoose.connect(mongoUri, {
             // Options to prevent serverless timeout issues
-            serverSelectionTimeoutMS: 5000,
         }).then((mongoose) => {
             console.log(`✅ MongoDB Connected: ${mongoose.connection.host}`);
             return mongoose;
